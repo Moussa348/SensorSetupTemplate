@@ -7,6 +7,30 @@
 SensorActivity activity(SENSOR_ID_AR);
 BLEService ledService("180A"); // BLE LED Service
 BLEByteCharacteristic switchCharacteristic("2A57", BLERead | BLEWrite);
+/*
+  TODO
+    -Send the Report through BLE to Portenta
+    -Portenta will add the id + ip
+*/
+
+enum ReportType
+{
+  GAZ,
+  ACTIVITY
+};
+enum CriticalityLevel
+{
+  LOW,
+  MEDIUM,
+  HIGH
+};
+struct Report
+{
+  String id;
+  String description;
+  CriticalityLevel CriticalityLevel;
+  ReportType ReportType;
+} report;
 
 void setup()
 {
@@ -25,8 +49,12 @@ void getActivity()
 {
   String act = activity.getActivity();
 
+  report.ReportType = ReportType::ACTIVITY;
+
   if (act.compareTo("Still activity started") != 0 && act.compareTo("Waiting to detect valid activity") != 0)
   {
+    report.description = act;
+    report.CriticalityLevel = CriticalityLevel::MEDIUM;
     Serial.println("Activity status: " + act);
     nicla::leds.setColor(red);
     delay(1000);
