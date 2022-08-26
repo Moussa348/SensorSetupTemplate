@@ -1,17 +1,13 @@
+/*
 #include <ArduinoBLE.h>
-#include "Arduino.h"
-#include "Arduino_BHY2.h"
 #include <Wire.h>
-#include "Nicla_System.h"
 
 SensorActivity activity(SENSOR_ID_AR);
 BLEService ledService("180A"); // BLE LED Service
 BLEByteCharacteristic switchCharacteristic("2A57", BLERead | BLEWrite);
-/*
   TODO
     -Send the Report through BLE to Portenta
     -Portenta will add the id + ip
-*/
 
 enum ReportType
 {
@@ -32,6 +28,18 @@ struct Report
   ReportType ReportType;
 } report;
 
+void bleSetup()
+{
+  BLE.setLocalName("Nicla Sense ME");
+  BLE.setAdvertisedService(ledService);
+  BLEDevice central = BLE.central();
+
+  if(central)
+  {
+    central.
+  }
+
+}
 void setup()
 {
   Serial.begin(115200);
@@ -39,10 +47,7 @@ void setup()
   activity.begin();
   nicla::begin();
   nicla::leds.begin();
-  BLE.setLocalName("Nicla Sense ME");
-  BLE.setAdvertisedService(ledService);
   BLE.advertise();
-  BLEDevice central = BLE.central();
 }
 
 void getActivity()
@@ -67,4 +72,21 @@ void loop()
 {
   BHY2.update();
   getActivity();
+}
+*/
+
+#include "Arduino.h"
+#include "Nicla_System.h"
+#include "Arduino_BHY2.h"
+#include <ble/advertising.hpp>
+
+Advertising advertising;
+void setup()
+{
+  advertising.setup();
+}
+
+void loop()
+{
+  advertising.loop();
 }
