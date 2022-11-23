@@ -3,17 +3,15 @@
 #include "Nicla_System.h"
 #include "services/IntrusionDetection.hpp"
 
-DynamicJsonDocument report(1024);
 IntrusionDetection intrusionDetection;
-SensorActivity sensorActivity(SENSOR_ID_AR);
 
 void setup()
 {
-  intrusionDetection.setup(sensorActivity);
+  intrusionDetection.setup();
 }
 
 void loop()
 {
   BHY2.update();
-  intrusionDetection.detect(report, sensorActivity);
+  intrusionDetection.detect();
 }
