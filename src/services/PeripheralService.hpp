@@ -2,7 +2,7 @@
 #include <functional>
 #include "RGBled.h"
 
-class Peripheral
+class PeripheralService
 {
 
 private:
@@ -20,13 +20,13 @@ private:
   void blink(RGBled &leds)
   {
     leds.setColor(yellow);
-    delay(1000);
+    delay(2500);
     leds.setColor(off);
-    delay(1000);
+    delay(2500);
   }
 
 public:
-  Peripheral() : bleService("19B10010-E8F2-537E-4F6C-D104768A1214"), bleStrCharacteristic("19B10012-E8F2-537E-4F6C-D104768A1214", BLERead, 100){};
+  PeripheralService() : bleService("19B10010-E8F2-537E-4F6C-D104768A1214"), bleStrCharacteristic("19B10012-E8F2-537E-4F6C-D104768A1214", BLERead, 100){};
 
   void setup()
   {
@@ -60,5 +60,4 @@ public:
       bleStrCharacteristic.writeValue(value);
     }
   }
-
 };

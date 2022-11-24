@@ -1,17 +1,17 @@
 #include "Arduino_BHY2.h"
 #include <ArduinoJson.h>
 #include "Nicla_System.h"
-#include "services/IntrusionDetection.hpp"
+#include "services/DetectionService.hpp"
 
-IntrusionDetection intrusionDetection;
+DetectionService detectionService;
 
 void setup()
 {
-  intrusionDetection.setup();
+  detectionService.setup();
 }
 
 void loop()
 {
   BHY2.update();
-  intrusionDetection.detect();
+  detectionService.detect();
 }

@@ -1,19 +1,26 @@
 #include "Arduino_BHY2.h"
 #include <ArduinoJson.h>
 #include "Nicla_System.h"
-#include "Peripheral.hpp"
+#include "PeripheralService.hpp"
 
-class IntrusionDetection
+class DetectionService
 {
 
 private:
-    Peripheral peripheral;
+    PeripheralService peripheralService;
     DynamicJsonDocument report;
     SensorActivity sensorActivity;
-    //const typedef void (&funcConnection)(RGBled, String);
+
+    void blink(RGBled &leds, RGBColors color)
+    {
+        leds.setColor(color);
+        delay(1000);
+        leds.setColor(off);
+        delay(1000);
+    }
 
 public:
-    IntrusionDetection() : report(1024), sensorActivity(SENSOR_ID_AR){};
+    DetectionService() : report(1024), sensorActivity(SENSOR_ID_AR){};
 
     void setup()
     {
@@ -22,7 +29,7 @@ public:
         sensorActivity.begin();
         nicla::begin();
         nicla::leds.begin();
-        peripheral.setup();
+        peripheralService.setup();
     }
 
     void detect()
@@ -32,19 +39,16 @@ public:
         report["reportTpye"] = "ACTIVITY";
 
         if (!act.equals("Still activity started") &&
-        !act.equals("Tilting activity ended"))
+            !act.equals("Tilting activity ended"))
         {
             report["description"] = act;
             report["criticalityLevel"] = "MEDIUM";
 
             Serial.println("Activity status: " + act);
 
-            nicla::leds.setColor(red);
-            delay(1000);
-            nicla::leds.setColor(off);
-            delay(1000);
+            blink(nicla::leds, red);
 
-            peripheral.connectionToCentralDevices(nicla::leds, report.as<String>());
+            peripheralService.connectionToCentralDevices(nicla::leds, report.as<String>());
         }
     }
 };
